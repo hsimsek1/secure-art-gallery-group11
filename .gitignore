@@ -1,0 +1,15 @@
+.venv/
+.env
+.env.*
+!.env.example
+instance/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+htmlcov/
+*.db
+*.db-*
+*.sqlite*
+local-credentials.txt
+docs/.render/

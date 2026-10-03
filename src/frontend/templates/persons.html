@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% block title %}Persons{% endblock %}{% block content %}<h1>Persons</h1><p>Tracked visitors and employees are separate from application login accounts.</p>
+<form method="post" class="card"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label>Name <input name="name" required maxlength="80"></label><label>Type <select name="kind"><option value="guest">Guest</option><option value="employee">Employee</option></select></label><button>Add person</button></form>
+<table><thead><tr><th>ID</th><th>Name</th><th>Type</th></tr></thead><tbody>{% for person in people.items %}<tr><td>{{ person.id }}</td><td>{{ person.name }}</td><td>{{ person.kind }}</td></tr>{% endfor %}</tbody></table>
+{% if people.has_prev %}<a href="{{ url_for('web.persons', page=people.prev_num) }}">Previous</a>{% endif %} Page {{ people.page }} {% if people.has_next %}<a href="{{ url_for('web.persons', page=people.next_num) }}">Next</a>{% endif %}{% endblock %}
