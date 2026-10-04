@@ -9,7 +9,7 @@ Status meanings: IMPLEMENTED = present in code; DOCUMENTED = delivered design/re
 | Required item | Delivered evidence | Status |
 | --- | --- | --- |
 | Team of two and team information | Group 11, Huseyin Simsek and Gustavo Pepe in README and reports | DOCUMENTED |
-| GitHub repository | https://github.com/hsimsek1/secure-art-gallery-group11; local structure and github_setup.md | IMPLEMENTED: remote exists; push and collaborator/Canvas checks remain |
+| GitHub repository | https://github.com/hsimsek1/secure-art-gallery-group11; required files are on `main` | VERIFIED: repository populated; collaborator/Canvas checks remain |
 | Technology stack | README and Phase I overview | DOCUMENTED; installed locally |
 | User roles | guest/employee/admin in User model and role matrix | IMPLEMENTED and VERIFIED |
 | Application description | README; Phase I overview | DOCUMENTED |
@@ -94,7 +94,7 @@ The official schedule places most of these in Week 7, with comprehensive securit
 
 ## Remaining items and source conflicts
 
-- Confirm the pushed files, grant required collaborator access and submit the assigned documents in Canvas.
+- Grant required collaborator access and submit the assigned documents in Canvas.
 - Confirm the Phase I due date: the supplied handout is labeled Fall 2024, while the main course project is Fall 2026. Do not interpret September 25, 2024 as a current deadline.
 - Complete partner-machine setup verification and both students' explanation/review.
 - Optional container verification needs a Docker installation.

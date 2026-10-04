@@ -4,7 +4,7 @@ Kent State CS 4/53401 Secure Programming, Fall 2026. **BIBIFI Group 11: Huseyin 
 
 This beginner-friendly web application tracks guests and employees entering and leaving an art gallery and its rooms. It includes persistent records, authentication, server-side roles, validated movement events, occupancy, searchable history and basic security auditing.
 
-**GitHub repository:** [hsimsek1/secure-art-gallery-group11](https://github.com/hsimsek1/secure-art-gallery-group11). The repository is public and is being populated with this local project. Original course PDFs and Gustavo's Word draft were read without modification.
+**GitHub repository:** [hsimsek1/secure-art-gallery-group11](https://github.com/hsimsek1/secure-art-gallery-group11). The repository is public and contains this project. Original course PDFs and Gustavo's Word draft were read without modification.
 
 ## Current milestone
 
