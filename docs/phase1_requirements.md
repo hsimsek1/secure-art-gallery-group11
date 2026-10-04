@@ -10,7 +10,7 @@ The complete course system will eventually manage gallery movements. Event recor
 
 ### Repository and technology
 GitHub: https://github.com/hsimsek1/secure-art-gallery-group11
-Python 3.12, Flask, Flask-SQLAlchemy/SQLAlchemy, SQLite, Flask-Login, Werkzeug password hashing, Jinja and HTML/CSS. Flask-WTF supplies CSRF protection; python-dotenv loads local configuration. Pytest verifies the milestone. The application runs locally in a browser at 127.0.0.1.
+Python 3.12, Flask, SQLite through Python's built-in sqlite3 module, and HTML/CSS. Flask includes Jinja templates and Werkzeug password hashing. Flask-Login handles authentication; Flask-WTF supplies CSRF protection. Flask loads private instance/config.py settings. Pytest is a development-only tool. The application runs locally in a browser at 127.0.0.1.
 
 ### Users and roles
 | Role | Current access |
@@ -40,8 +40,8 @@ These requirements describe the controls retained in the Week 6 implementation. 
 | SEC-3 | Enforce login and administrator permissions in Flask routes; do not rely on hiding browser links. |
 | SEC-4 | Use Flask-Login with Flask signed sessions, HttpOnly and SameSite=Lax cookies, and a 30-minute session lifetime. Clear the session at login and logout. |
 | SEC-5 | Validate login input lengths and username characters on the server. Use CSRF tokens on login and logout forms. |
-| SEC-6 | Use SQLAlchemy bound queries for browser input. Let Jinja escape displayed text. |
-| SEC-7 | Generate local secrets and seed passwords; exclude .env, credentials, databases and the virtual environment from Git. Run locally with debugging off. |
+| SEC-6 | Use parameterized sqlite3 queries with ? placeholders for browser input. Let Jinja escape displayed text. |
+| SEC-7 | Generate local secrets and seed passwords; exclude instance/config.py, credentials, databases and the virtual environment from Git. Run locally with debugging off. |
 | SEC-8 | Log login success, login failure and logout with time and a user ID when known. Do not log passwords or tokens. |
 | SEC-9 | Limit request bodies to 16 KiB. This is a basic size check, not a comprehensive availability defense. |
 
@@ -52,7 +52,7 @@ These requirements describe the controls retained in the Week 6 implementation. 
 **Accountability:** retain a small authentication log. It is not a tamper-proof audit system.
 
 ### Verification and boundaries
-The reduced tests cover account login, invalid credentials, protected pages, logout, password hashes, role checks, database initialization and seeding, schema consistency, input validation and CSRF. The demonstration is Browser -> Flask -> SQLite.
+The reduced tests cover account login, invalid credentials, protected pages, logout, password hashes, role checks, database initialization and seeding, schema constraints, input validation and CSRF. The demonstration is Browser -> Flask -> SQLite.
 
 This is a local classroom milestone. HTTPS deployment, broader attack defenses, full gallery behavior and comprehensive security testing are outside Weeks 4-6 and are not claimed complete. Persons are seeded reference records; there is no persons-management page. Users are login accounts and are separate from tracked persons.
 

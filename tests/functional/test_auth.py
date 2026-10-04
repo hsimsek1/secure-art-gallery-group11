@@ -1,10 +1,9 @@
 import sqlite3
 
 import pytest
-from sqlalchemy import inspect, select
 
 from src.backend import ROOT
-from src.backend.models import AuditLog, Person, Room, User, db
+from src.backend.db import get_db
 from tests.conftest import csrf_token
 
 
@@ -35,7 +34,7 @@ def test_logout_clears_session_and_logs_authentication(app, client, login):
     assert response.status_code == 302
     assert client.get("/dashboard").status_code == 302
     with app.app_context():
-        actions = db.session.scalars(select(AuditLog.action).order_by(AuditLog.id)).all()
+        actions = [row["action"] for row in get_db().execute("SELECT action FROM audit_logs ORDER BY id")]
         assert actions == ["LOGIN_SUCCESS", "LOGOUT"]
 
 
@@ -44,21 +43,28 @@ def test_database_initialization_and_seed(app):
     assert runner.invoke(args=["init-db"]).exit_code == 0
     assert runner.invoke(args=["seed"]).exit_code == 0
     with app.app_context():
-        assert set(inspect(db.engine).get_table_names()) == {"users", "persons", "rooms", "audit_logs"}
-        assert len(db.session.scalars(select(User)).all()) == 3
-        assert len(db.session.scalars(select(Person)).all()) == 2
-        assert len(db.session.scalars(select(Room)).all()) == 2
+        connection = get_db()
+        tables = {row["name"] for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+        assert tables == {"users", "persons", "rooms", "audit_logs"}
+        assert connection.execute("SELECT COUNT(*) FROM users").fetchone()[0] == 3
+        assert connection.execute("SELECT COUNT(*) FROM persons").fetchone()[0] == 2
+        assert connection.execute("SELECT COUNT(*) FROM rooms").fetchone()[0] == 2
 
 
-def test_sql_schema_and_seed_match_models(app):
+def test_schema_enforces_roles_and_foreign_keys():
     with sqlite3.connect(":memory:") as connection:
         connection.executescript((ROOT / "database/schema.sql").read_text())
         connection.executescript((ROOT / "database/seed.sql").read_text())
-        assert connection.execute("SELECT COUNT(*) FROM rooms").fetchone()[0] == 2
-        with app.app_context():
-            for table in db.metadata.sorted_tables:
-                columns = {row[1] for row in connection.execute(f"PRAGMA table_info({table.name})")}
-                assert columns == set(table.columns.keys())
+        with pytest.raises(sqlite3.IntegrityError):
+            connection.execute(
+                "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)",
+                ("invalid", "not-a-real-password-hash", "superuser"),
+            )
+        with pytest.raises(sqlite3.IntegrityError):
+            connection.execute(
+                "INSERT INTO audit_logs (user_id, action, timestamp) VALUES (?, ?, CURRENT_TIMESTAMP)",
+                (999, "LOGIN_SUCCESS"),
+            )
 
 
 def test_invalid_login_input(client):

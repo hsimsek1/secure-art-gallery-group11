@@ -12,14 +12,27 @@ This version contains the team requirements, secure design, and a small working 
 
 ## Technology and structure
 
-Python 3.12, Flask, Flask-SQLAlchemy/SQLAlchemy, Flask-Login, SQLite, Werkzeug password hashing, Jinja, HTML and CSS. Existing Flask-WTF handles CSRF; python-dotenv loads local secrets; pytest runs the tests.
+The application has three direct package dependencies: Flask, Flask-Login and Flask-WTF.
 
-- `src/backend/`: application setup, database models and routes.
+| Part | Choice |
+| --- | --- |
+| Language | Python 3.12 |
+| Web application | Flask |
+| Database | SQLite, using Python's built-in sqlite3 module |
+| Pages | Jinja (included with Flask), HTML and CSS |
+| Password hashing | Werkzeug scrypt (included with Flask) |
+| Authentication | Flask-Login |
+| Form protection | Flask-WTF CSRF |
+| Tests | pytest, development only |
+
+There is no ORM, separate database server, JavaScript framework or separate configuration-loading library. Database values use ? placeholders; browser input is never inserted into SQL strings. The connection handling follows [Flask's SQLite pattern](https://flask.palletsprojects.com/en/stable/patterns/sqlite3/).
+
+- `src/backend/`: application setup, SQLite connections, login-user object and routes.
 - `src/frontend/`: login, room list and administrator demonstration templates.
 - `database/`: schema and fictional seed records.
 - `docs/`: requirements/design PDFs, editable Markdown and three SVG diagrams.
 - `tests/functional/` and `tests/security/`: 14 milestone tests.
-- `tools/`: generate local credentials, export the schema, rebuild the reports.
+- `tools/`: generate local credentials and rebuild the reports.
 
 There are four tables: Users, Persons, Rooms and a small AuditLogs table for login/logout activity. Persons are seeded reference records only. Sessions use Flask signed cookies, so no session table is needed.
 
@@ -35,9 +48,11 @@ py -3.12 -m venv .venv
 .\.venv\Scripts\python.exe -m flask --app src.backend seed
 ```
 
-The setup script generates a local secret and three random passwords. It will not overwrite existing configuration. **If this workspace already has `.env` and `local-credentials.txt`, skip that script.** Initialization and seeding can be repeated without deleting existing records.
+The setup script writes a local secret and three random passwords to ignored `instance/config.py`, which Flask loads directly. It will not overwrite existing configuration. **If this workspace already has `instance/config.py` and `local-credentials.txt`, skip that script.** Initialization and seeding can be repeated without deleting existing records.
 
-This simplified version uses ignored `instance/week6.db`. Any older `instance/gallery.db` remains untouched and is not used by this version. Reference data includes two fictional persons and Painting Room (capacity 10) and Sculpture Room (capacity 5).
+This simplified version uses ignored `instance/week6.db`. Any older `instance/gallery.db` remains untouched and is not used by this version. The existing workspace's credentials have been preserved in `instance/config.py`; its old .env is archived privately as `instance/legacy.env`. When updating a different old checkout, copy its four existing secret/password settings into `instance/config.py` using `config.example.py` as the format, and keep its credentials file.
+
+Reference data includes two fictional persons and Painting Room (capacity 10) and Sculpture Room (capacity 5).
 
 For macOS/Linux, use `python3.12 -m venv .venv` and replace `.\.venv\Scripts\python.exe` with `.venv/bin/python`.
 
@@ -71,17 +86,20 @@ These Flask routes are the backend; a separate REST API is not required. `login_
 
 ## Basic security
 
-Passwords are salted and hashed. Sessions use a local signing secret, HttpOnly/SameSite cookies and a 30-minute lifetime. Login and logout forms require CSRF tokens. Login fields are validated, queries use SQLAlchemy bound values, and Jinja escapes output. Request bodies are limited to 16 KiB.
+Passwords are salted and hashed. Sessions use a local signing secret, HttpOnly/SameSite cookies and a 30-minute lifetime. Login and logout forms require CSRF tokens. Login fields are validated, queries use sqlite3 parameter binding, and Jinja escapes output. Request bodies are limited to 16 KiB.
 
 The small authentication log stores action, time and an optional user ID, never passwords or tokens. There is no audit browser. Secrets, credentials, databases and virtual environments are excluded from Git. This is a local HTTP demonstration with debugging off; it is not a production deployment or a complete security assessment.
 
 ## Tests and demonstration
 
+Install the development dependencies when running tests:
+
 ```powershell
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
 .\.venv\Scripts\python.exe -m pytest -q
 ```
 
-The tests use temporary databases and cover login for all three roles, invalid passwords, login protection, logout, password hashing, administrator access/denial, initialization, repeatable seed data, schema consistency, input validation and CSRF. GitHub Actions installs the pinned dependencies on Python 3.12 and runs the same command. `pytest.ini` uses pytest's default temporary-directory behavior.
+The tests use temporary databases and cover login for all three roles, invalid passwords, login protection, logout, password hashing, administrator access/denial, initialization, repeatable seed data, schema constraints, input validation and CSRF. GitHub Actions installs requirements-dev.txt on Python 3.12 and runs the same command. `pytest.ini` uses pytest's default temporary-directory behavior.
 
 To demonstrate Week 6: initialize and seed the database, log in as Employee, view the seeded rooms, open `/admin` to see access denied, log out, then log in as Administrator and open `/admin` successfully.
 
@@ -93,4 +111,4 @@ To demonstrate Week 6: initialize and seed the database, log in as Employee, vie
 
 The scope follows **F26_BIBIFI_Project.pdf, pages 4-5**. Full gallery events, occupancy, history, persons/account management and state validation belong to the later application milestone and are absent here. Docker appears in the overall repository layout on page 7, but it is omitted from this Weeks 4-6 version because it is not required by that milestone's implementation checklist.
 
-After changing the models, `python tools/export_schema.py` refreshes the schema file. To rebuild the PDFs and diagrams, run `python tools/build_reports.py` in a documentation environment with ReportLab available; ReportLab is not needed to run the application. Review the PDF layout after rebuilding.
+`database/schema.sql` is the single schema definition used by `init-db`. No export or ORM model synchronization is needed. To rebuild the PDFs and diagrams, run `python tools/build_reports.py` in a documentation environment with ReportLab available; ReportLab is not needed to run the application. Review the PDF layout after rebuilding.

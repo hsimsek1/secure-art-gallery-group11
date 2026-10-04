@@ -1,39 +1,28 @@
--- Generated from src/backend/models.py by tools/export_schema.py.
+-- Source of truth for the Week 6 database. Initialization preserves existing data.
+PRAGMA foreign_keys = ON;
 
-PRAGMA foreign_keys=ON;
-
-CREATE TABLE persons (
-	id INTEGER NOT NULL,
-	name VARCHAR(80) NOT NULL,
-	kind VARCHAR(12) NOT NULL,
-	PRIMARY KEY (id),
-	CHECK (kind IN ('guest','employee'))
+CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY,
+    username TEXT NOT NULL UNIQUE,
+    password_hash TEXT NOT NULL,
+    role TEXT NOT NULL CHECK (role IN ('guest', 'employee', 'admin'))
 );
 
-CREATE TABLE rooms (
-	id INTEGER NOT NULL,
-	name VARCHAR(80) NOT NULL,
-	capacity INTEGER NOT NULL,
-	PRIMARY KEY (id),
-	CHECK (capacity > 0),
-	UNIQUE (name)
+CREATE TABLE IF NOT EXISTS persons (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    kind TEXT NOT NULL CHECK (kind IN ('guest', 'employee'))
 );
 
-CREATE TABLE users (
-	id INTEGER NOT NULL,
-	username VARCHAR(40) NOT NULL,
-	password_hash VARCHAR(255) NOT NULL,
-	role VARCHAR(12) NOT NULL,
-	PRIMARY KEY (id),
-	CHECK (role IN ('guest','employee','admin')),
-	UNIQUE (username)
+CREATE TABLE IF NOT EXISTS rooms (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL UNIQUE,
+    capacity INTEGER NOT NULL CHECK (capacity > 0)
 );
 
-CREATE TABLE audit_logs (
-	id INTEGER NOT NULL,
-	user_id INTEGER,
-	action VARCHAR(20) NOT NULL,
-	timestamp DATETIME NOT NULL,
-	PRIMARY KEY (id),
-	FOREIGN KEY(user_id) REFERENCES users (id)
+CREATE TABLE IF NOT EXISTS audit_logs (
+    id INTEGER PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    action TEXT NOT NULL,
+    timestamp DATETIME NOT NULL
 );

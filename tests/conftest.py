@@ -4,27 +4,24 @@ import secrets
 import pytest
 
 from src.backend import create_app
-from src.backend.models import db
 
 
 @pytest.fixture
-def app(tmp_path, monkeypatch):
+def app(tmp_path):
     password = secrets.token_urlsafe(18)
-    for role in ("guest", "employee", "admin"):
-        monkeypatch.setenv(f"SEED_{role.upper()}_PASSWORD", password)
     app = create_app({
         "TESTING": True,
         "SECRET_KEY": secrets.token_hex(32),
-        "SQLALCHEMY_DATABASE_URI": "sqlite:///" + str(tmp_path / "test.db"),
+        "DATABASE": str(tmp_path / "test.db"),
+        "SEED_GUEST_PASSWORD": password,
+        "SEED_EMPLOYEE_PASSWORD": password,
+        "SEED_ADMIN_PASSWORD": password,
     })
     runner = app.test_cli_runner()
     assert runner.invoke(args=["init-db"]).exit_code == 0
     assert runner.invoke(args=["seed"]).exit_code == 0
     app.config["TEST_PASSWORD"] = password
-    yield app
-    with app.app_context():
-        db.session.remove()
-        db.engine.dispose()
+    return app
 
 
 @pytest.fixture

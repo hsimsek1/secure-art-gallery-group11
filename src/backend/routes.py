@@ -3,9 +3,10 @@ import re
 
 from flask import Blueprint, abort, redirect, render_template, request, session, url_for
 from flask_login import current_user, login_required, login_user, logout_user
-from sqlalchemy import select
+from werkzeug.security import check_password_hash
 
-from .models import AuditLog, Room, User, db
+from .db import get_db, record_auth
+from .users import User
 
 web = Blueprint("web", __name__)
 
@@ -25,25 +26,22 @@ def login():
     if not re.fullmatch(r"[a-z0-9_]{1,40}", username) or not 1 <= len(password) <= 128:
         return render_template("login.html", error="Enter a valid username and password."), 400
 
-    user = db.session.scalar(select(User).where(User.username == username))
-    if user is None or not user.check_password(password):
-        db.session.add(AuditLog(user_id=user.id if user else None, action="LOGIN_FAILED"))
-        db.session.commit()
+    row = get_db().execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
+    if row is None or not check_password_hash(row["password_hash"], password):
+        record_auth("LOGIN_FAILED", row["id"] if row else None)
         return render_template("login.html", error="Invalid username or password."), 401
 
     session.clear()
-    login_user(user)
+    login_user(User(**row))
     session.permanent = True
-    db.session.add(AuditLog(user_id=user.id, action="LOGIN_SUCCESS"))
-    db.session.commit()
+    record_auth("LOGIN_SUCCESS", row["id"])
     return redirect(url_for("web.dashboard"))
 
 
 @web.post("/logout")
 @login_required
 def logout():
-    db.session.add(AuditLog(user_id=current_user.id, action="LOGOUT"))
-    db.session.commit()
+    record_auth("LOGOUT", current_user.id)
     logout_user()
     session.clear()
     return redirect(url_for("web.login"))
@@ -52,7 +50,7 @@ def logout():
 @web.get("/dashboard")
 @login_required
 def dashboard():
-    rooms = db.session.scalars(select(Room).order_by(Room.id)).all()
+    rooms = get_db().execute("SELECT * FROM rooms ORDER BY id").fetchall()
     return render_template("dashboard.html", rooms=rooms)
 
 

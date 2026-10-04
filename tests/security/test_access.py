@@ -1,15 +1,15 @@
 import pytest
-from sqlalchemy import select
+from werkzeug.security import check_password_hash
 
-from src.backend.models import User, db
+from src.backend.db import get_db
 
 
 def test_passwords_are_hashed(app):
     with app.app_context():
-        user = db.session.scalar(select(User).where(User.username == "employee11"))
-        assert user.password_hash != app.config["TEST_PASSWORD"]
-        assert user.password_hash.startswith("scrypt:")
-        assert user.check_password(app.config["TEST_PASSWORD"])
+        user = get_db().execute("SELECT * FROM users WHERE username = ?", ("employee11",)).fetchone()
+        assert user["password_hash"] != app.config["TEST_PASSWORD"]
+        assert user["password_hash"].startswith("scrypt:")
+        assert check_password_hash(user["password_hash"], app.config["TEST_PASSWORD"])
 
 
 @pytest.mark.parametrize("role", ["guest", "employee"])

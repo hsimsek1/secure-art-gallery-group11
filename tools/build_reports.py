@@ -47,7 +47,7 @@ def boundary(d, x, y, w, h, label):
 def architecture():
     d = Drawing(504, 130)
     box(d, 0, 42, 110, 65, "Browser", ["Login and room list", "HTML / CSS"])
-    box(d, 177, 28, 150, 92, "Flask backend", ["Routes / Flask-Login", "Password and role checks", "SQLAlchemy"])
+    box(d, 177, 28, 150, 92, "Flask backend", ["Routes / Flask-Login", "Password and role checks", "Python sqlite3"])
     box(d, 394, 42, 110, 65, "SQLite", ["week6.db", "Four tables"])
     arrow(d, 110, 74, 177, 74, "HTTP", lx=126, ly=82)
     arrow(d, 327, 74, 394, 74, "Queries", lx=339, ly=82)
