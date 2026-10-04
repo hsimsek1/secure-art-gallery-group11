@@ -34,7 +34,11 @@ def test_logout_clears_session_and_logs_authentication(app, client, login):
     assert response.status_code == 302
     assert client.get("/dashboard").status_code == 302
     with app.app_context():
-        actions = [row["action"] for row in get_db().execute("SELECT action FROM audit_logs ORDER BY id")]
+        connection = get_db()
+        records = connection.execute("SELECT action FROM audit_logs ORDER BY id").fetchall()
+        actions = []
+        for record in records:
+            actions.append(record["action"])
         assert actions == ["LOGIN_SUCCESS", "LOGOUT"]
 
 
@@ -44,7 +48,10 @@ def test_database_initialization_and_seed(app):
     assert runner.invoke(args=["seed"]).exit_code == 0
     with app.app_context():
         connection = get_db()
-        tables = {row["name"] for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")}
+        records = connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'").fetchall()
+        tables = set()
+        for record in records:
+            tables.add(record["name"])
         assert tables == {"users", "persons", "rooms", "audit_logs"}
         assert connection.execute("SELECT COUNT(*) FROM users").fetchone()[0] == 3
         assert connection.execute("SELECT COUNT(*) FROM persons").fetchone()[0] == 2
@@ -68,8 +75,9 @@ def test_schema_enforces_roles_and_foreign_keys():
 
 
 def test_invalid_login_input(client):
-    response = client.post("/login", data={
-        "username": "!", "password": "example-password",
-        "csrf_token": csrf_token(client, "/login"),
-    })
-    assert response.status_code == 400
+    for username in ("!", "é", "x" * 41, ""):
+        response = client.post("/login", data={
+            "username": username, "password": "example-password",
+            "csrf_token": csrf_token(client, "/login"),
+        })
+        assert response.status_code == 400

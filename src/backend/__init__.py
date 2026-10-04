@@ -1,5 +1,4 @@
 """Flask setup and database commands."""
-import os
 from datetime import timedelta
 from pathlib import Path
 
@@ -12,12 +11,14 @@ from werkzeug.security import generate_password_hash
 from .db import close_db, get_db
 from .users import User
 
+# This file is in src/backend, two folders below the project root.
 ROOT = Path(__file__).resolve().parents[2]
 login_manager = LoginManager()
 csrf = CSRFProtect()
 
 
 def create_app(test_config=None):
+    """Build the app. Tests can supply settings for a temporary database."""
     instance = ROOT / "instance"
     instance.mkdir(exist_ok=True)
     app = Flask(
@@ -36,29 +37,31 @@ def create_app(test_config=None):
         MAX_CONTENT_LENGTH=16 * 1024,
         DEBUG=False,
     )
+    # Flask reads this file from the private instance folder.
     app.config.from_pyfile("config.py", silent=True)
-    # Environment variables can override local settings without another library.
-    for key in ("SECRET_KEY", "SEED_GUEST_PASSWORD", "SEED_EMPLOYEE_PASSWORD", "SEED_ADMIN_PASSWORD"):
-        if key in os.environ:
-            app.config[key] = os.environ[key]
-    if test_config:
+    if test_config is not None:
         app.config.update(test_config)
     if len(app.config["SECRET_KEY"]) < 32:
         raise RuntimeError("Run tools/setup_local.py to generate a local secret key.")
 
-    app.teardown_appcontext(close_db)
+    app.teardown_appcontext(close_db)  # Close the connection after each request.
     login_manager.init_app(app)
     login_manager.login_view = "web.login"
     csrf.init_app(app)
 
     @login_manager.user_loader
     def load_user(user_id):
+        # Flask-Login remembers an ID in the session. Reload its account from SQLite.
         try:
             user_id = int(user_id)
         except (TypeError, ValueError):
             return None
-        row = get_db().execute("SELECT * FROM users WHERE id = ?", (user_id,)).fetchone()
-        return User(**row) if row else None
+        connection = get_db()
+        result = connection.execute("SELECT * FROM users WHERE id = ?", (user_id,))
+        row = result.fetchone()
+        if row is None:
+            return None
+        return User(row)
 
     from .routes import web
     app.register_blueprint(web)
@@ -70,25 +73,33 @@ def create_app(test_config=None):
     @app.cli.command("init-db")
     def init_db():
         """Create missing tables without deleting existing records."""
-        get_db().executescript((ROOT / "database/schema.sql").read_text())
+        connection = get_db()
+        schema = (ROOT / "database/schema.sql").read_text()
+        connection.executescript(schema)
         click.echo("Database initialized.")
 
     @app.cli.command("seed")
     def seed():
         """Create three demo accounts and synthetic reference records."""
         connection = get_db()
-        connection.executescript((ROOT / "database/seed.sql").read_text())
+        seed_sql = (ROOT / "database/seed.sql").read_text()
+        connection.executescript(seed_sql)
+        # Commit the new accounts together, or roll them back if an error occurs.
         with connection:
             for role in ("guest", "employee", "admin"):
                 username = role + "11"
-                if connection.execute("SELECT id FROM users WHERE username = ?", (username,)).fetchone():
+                result = connection.execute("SELECT id FROM users WHERE username = ?", (username,))
+                existing_user = result.fetchone()
+                if existing_user is not None:
                     continue
-                password = app.config.get(f"SEED_{role.upper()}_PASSWORD", "")
-                if not 12 <= len(password) <= 128:
+                setting_name = "SEED_" + role.upper() + "_PASSWORD"
+                password = app.config.get(setting_name, "")
+                if len(password) < 12 or len(password) > 128:
                     raise click.ClickException("Run tools/setup_local.py before seeding.")
+                password_hash = generate_password_hash(password, method="scrypt")
                 connection.execute(
                     "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)",
-                    (username, generate_password_hash(password, method="scrypt"), role),
+                    (username, password_hash, role),
                 )
         click.echo("Demo accounts, persons and rooms are ready.")
 

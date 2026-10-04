@@ -36,6 +36,23 @@ There is no ORM, separate database server, JavaScript framework or separate conf
 
 There are four tables: Users, Persons, Rooms and a small AuditLogs table for login/logout activity. Persons are seeded reference records only. Sessions use Flask signed cookies, so no session table is needed.
 
+## Reading the code
+
+Start with these files in order:
+
+1. `database/schema.sql`: the four tables, their columns, and their constraints.
+2. `src/backend/routes.py`: what happens when someone opens a page or submits the login form.
+3. `src/backend/db.py`: opening a connection, closing it, and saving an authentication log entry.
+4. `src/backend/users.py`: an ordinary class holding a logged-in user's ID, username and role.
+5. `src/backend/__init__.py`: connecting the Flask parts, reading local settings, and registering database commands.
+6. `src/frontend/templates/`: HTML pages with small Jinja conditions and loops.
+
+The login function follows a straight sequence: read the form, validate it, find the account with a parameterized query, check the password hash, and start the session. The dashboard reads room rows and passes them to an HTML template.
+
+A few Flask conventions are worth learning: `create_app()` builds the application; a `Blueprint` groups page routes; `@login_required` redirects visitors who have not logged in; `g` holds a database connection for the current request. Comments explain these where they are used. Configuration comes from the private `instance/config.py` file; tests supply temporary settings.
+
+`tools/build_reports.py` is only a PDF/diagram utility. You do not need it to run or demonstrate the application.
+
 ## Installation and database setup
 
 Install Python 3.12, then open PowerShell in the repository:

@@ -1,6 +1,4 @@
-"""Login, logout, a database-backed dashboard, and one role check."""
-import re
-
+"""The functions that handle requests from the browser."""
 from flask import Blueprint, abort, redirect, render_template, request, session, url_for
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import check_password_hash
@@ -8,33 +6,61 @@ from werkzeug.security import check_password_hash
 from .db import get_db, record_auth
 from .users import User
 
+# A Blueprint groups these page routes so create_app() can register them.
 web = Blueprint("web", __name__)
 
 
 @web.get("/")
 def index():
-    return redirect(url_for("web.dashboard" if current_user.is_authenticated else "web.login"))
+    if current_user.is_authenticated:
+        return redirect(url_for("web.dashboard"))
+    return redirect(url_for("web.login"))
 
 
 @web.route("/login", methods=["GET", "POST"])
 def login():
+    # GET displays the form. POST processes the submitted form.
     if request.method == "GET":
         return render_template("login.html")
 
     username = request.form.get("username", "").strip().lower()
     password = request.form.get("password", "")
-    if not re.fullmatch(r"[a-z0-9_]{1,40}", username) or not 1 <= len(password) <= 128:
-        return render_template("login.html", error="Enter a valid username and password."), 400
 
-    row = get_db().execute("SELECT * FROM users WHERE username = ?", (username,)).fetchone()
-    if row is None or not check_password_hash(row["password_hash"], password):
-        record_auth("LOGIN_FAILED", row["id"] if row else None)
-        return render_template("login.html", error="Invalid username or password."), 401
+    # Accept only short usernames containing these ASCII characters.
+    allowed_characters = "abcdefghijklmnopqrstuvwxyz0123456789_"
+    username_is_valid = True
+    if len(username) < 1 or len(username) > 40:
+        username_is_valid = False
+    for character in username:
+        if character not in allowed_characters:
+            username_is_valid = False
 
+    if not username_is_valid or len(password) < 1 or len(password) > 128:
+        message = "Enter a valid username and password."
+        return render_template("login.html", error=message), 400
+
+    connection = get_db()
+    # The ? keeps the submitted value separate from the SQL statement.
+    result = connection.execute("SELECT * FROM users WHERE username = ?", (username,))
+    user_row = result.fetchone()
+
+    user_id = None
+    password_is_correct = False
+    if user_row is not None:
+        user_id = user_row["id"]
+        password_is_correct = check_password_hash(user_row["password_hash"], password)
+
+    if not password_is_correct:
+        record_auth("LOGIN_FAILED", user_id)
+        message = "Invalid username or password."
+        return render_template("login.html", error=message), 401
+
+    # Start a new login session only after checking the password.
     session.clear()
-    login_user(User(**row))
-    session.permanent = True
-    record_auth("LOGIN_SUCCESS", row["id"])
+    user = User(user_row)
+    login_user(user)
+    session.permanent = True  # Use the 30-minute lifetime from create_app().
+    record_auth("LOGIN_SUCCESS", user.id)
     return redirect(url_for("web.dashboard"))
 
 
@@ -50,13 +76,16 @@ def logout():
 @web.get("/dashboard")
 @login_required
 def dashboard():
-    rooms = get_db().execute("SELECT * FROM rooms ORDER BY id").fetchall()
+    connection = get_db()
+    result = connection.execute("SELECT * FROM rooms ORDER BY id")
+    rooms = result.fetchall()
     return render_template("dashboard.html", rooms=rooms)
 
 
 @web.get("/admin")
 @login_required
 def admin():
+    # Check the role here even when the navigation link is hidden.
     if current_user.role != "admin":
         abort(403)
     return render_template("admin.html")
