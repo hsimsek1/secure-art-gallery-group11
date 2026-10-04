@@ -8,7 +8,7 @@ credentials_path = root / "local-credentials.txt"
 if env_path.exists() or credentials_path.exists():
     raise SystemExit("Configuration already exists. No files changed.")
 passwords = {role: secrets.token_urlsafe(18) for role in ("admin", "employee", "guest")}
-lines = ["SECRET_KEY=" + secrets.token_hex(32), "APP_ENV=development"]
+lines = ["SECRET_KEY=" + secrets.token_hex(32)]
 lines += [f"SEED_{role.upper()}_PASSWORD={password}" for role, password in passwords.items()]
 with env_path.open("x", encoding="utf-8") as stream:
     stream.write("\n".join(lines) + "\n")

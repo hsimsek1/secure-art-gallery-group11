@@ -2,70 +2,39 @@
 <!DOCTYPE svg
   PUBLIC '-//W3C//DTD SVG 1.0//EN'
   'http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd'>
-<svg width="504" height="452" preserveAspectRatio="xMinYMin meet" viewBox="0 0 504 452" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
+<svg width="504" height="245" preserveAspectRatio="xMinYMin meet" viewBox="0 0 504 245" xmlns="http://www.w3.org/2000/svg" version="1.0" fill-rule="evenodd" xmlns:xlink="http://www.w3.org/1999/xlink">
 	<title>...</title>
 	<desc>...</desc>
 	<clipPath id="clip">
-		<rect x="0" y="0" width="504" height="452"/>
+		<rect x="0" y="0" width="504" height="245"/>
 	</clipPath>
-	<g id="group" transform="scale(1,-1) translate(0,-452)" style="clip-path: url(#clip)">
+	<g id="group" transform="scale(1,-1) translate(0,-245)" style="clip-path: url(#clip)">
 		<g transform="">
-			<rect x="4" y="280" width="207" height="165" rx="5" ry="5" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
-			<text x="13" y="427" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,854) scale(1,-1)">Users</text>
-			<text x="13" y="410" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,820) scale(1,-1)">PK id : integer</text>
-			<text x="13" y="397" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,794) scale(1,-1)">username : text UNIQUE</text>
-			<text x="13" y="384" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,768) scale(1,-1)">password_hash : text</text>
-			<text x="13" y="371" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,742) scale(1,-1)">role : guest / employee / admin</text>
-			<text x="13" y="358" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,716) scale(1,-1)">active : boolean</text>
-			<text x="13" y="345" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,690) scale(1,-1)">created_at : UTC datetime</text>
-			<text x="13" y="332" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,664) scale(1,-1)">session_version : integer</text>
-			<rect x="296" y="329" width="204" height="116" rx="5" ry="5" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
-			<text x="305" y="427" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,854) scale(1,-1)">Persons</text>
-			<text x="305" y="410" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,820) scale(1,-1)">PK id : integer</text>
-			<text x="305" y="397" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,794) scale(1,-1)">name : text</text>
-			<text x="305" y="384" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,768) scale(1,-1)">kind : guest / employee</text>
-			<text x="305" y="371" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,742) scale(1,-1)">created_at : UTC datetime</text>
-			<rect x="296" y="212" width="204" height="95" rx="5" ry="5" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
-			<text x="305" y="289" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,578) scale(1,-1)">Rooms</text>
-			<text x="305" y="272" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,544) scale(1,-1)">PK id : integer</text>
-			<text x="305" y="259" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,518) scale(1,-1)">name : text UNIQUE</text>
-			<text x="305" y="246" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,492) scale(1,-1)">capacity : positive integer</text>
-			<rect x="4" y="10" width="220" height="190" rx="5" ry="5" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
-			<text x="13" y="182" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,364) scale(1,-1)">GalleryEvents</text>
-			<text x="13" y="165" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,330) scale(1,-1)">PK id : integer</text>
-			<text x="13" y="152" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,304) scale(1,-1)">FK person_id -&gt; Persons.id</text>
-			<text x="13" y="139" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,278) scale(1,-1)">FK room_id -&gt; Rooms.id (optional)</text>
-			<text x="13" y="126" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,252) scale(1,-1)">event_type : one of four types</text>
-			<text x="13" y="113" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,226) scale(1,-1)">timestamp : UTC datetime</text>
-			<text x="13" y="100" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,200) scale(1,-1)">FK created_by -&gt; Users.id</text>
-			<rect x="296" y="10" width="204" height="165" rx="5" ry="5" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
-			<text x="305" y="157" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,314) scale(1,-1)">AuditLogs</text>
-			<text x="305" y="140" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,280) scale(1,-1)">PK id : integer</text>
-			<text x="305" y="127" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,254) scale(1,-1)">FK user_id -&gt; Users.id (optional)</text>
-			<text x="305" y="114" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,228) scale(1,-1)">action : text</text>
-			<text x="305" y="101" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,202) scale(1,-1)">details : bounded text</text>
-			<text x="305" y="88" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,176) scale(1,-1)">timestamp : UTC datetime</text>
-			<text x="305" y="75" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,150) scale(1,-1)">result : SUCCESS / REJECTED</text>
-			<path d="M 77,280 L 77,200 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1.1;"/>
-			<polygon points="77 200, 79.33651 205.5264, 74.66349 205.5264" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,23%,28%); fill-rule: evenodd;"/>
-			<text x="85" y="235" style="font-family: Helvetica; font-size: 8px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,470) scale(1,-1)">1 to N</text>
-			<path d="M 296,371 L 251,371 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1;"/>
-			<path d="M 251,371 L 251,179 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1;"/>
-			<path d="M 251,179 L 224,179 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1.1;"/>
-			<polygon points="224 179, 229.5264 176.6635, 229.5264 181.3365" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,23%,28%); fill-rule: evenodd;"/>
-			<text x="251" y="183" style="font-family: Helvetica; font-size: 8px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,366) scale(1,-1)">1 to N</text>
-			<path d="M 296,257 L 266,257 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1;"/>
-			<path d="M 266,257 L 266,140 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1;"/>
-			<path d="M 266,140 L 224,140 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1.1;"/>
-			<polygon points="224 140, 229.5264 137.6635, 229.5264 142.3365" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,23%,28%); fill-rule: evenodd;"/>
-			<text x="235" y="125" style="font-family: Helvetica; font-size: 8px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,250) scale(1,-1)">1 to N</text>
-			<path d="M 211,302 L 236,302 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1;"/>
-			<path d="M 236,302 L 236,225 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1;"/>
-			<path d="M 236,225 L 286,225 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1;"/>
-			<path d="M 286,225 L 286,92 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1;"/>
-			<path d="M 286,92 L 296,92 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1.1;"/>
-			<polygon points="296 92, 290.4736 94.33651, 290.4736 89.66349" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,23%,28%); fill-rule: evenodd;"/>
-			<text x="295" y="187" style="font-family: Helvetica; font-size: 8px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,374) scale(1,-1)">Users 1 to N AuditLogs</text>
+			<rect x="0" y="130" width="208" height="110" rx="5" ry="5" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="9" y="222" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,444) scale(1,-1)">Users</text>
+			<text x="9" y="205" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,410) scale(1,-1)">PK id</text>
+			<text x="9" y="192" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,384) scale(1,-1)">username (unique)</text>
+			<text x="9" y="179" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,358) scale(1,-1)">password_hash</text>
+			<text x="9" y="166" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,332) scale(1,-1)">role: guest / employee / admin</text>
+			<rect x="296" y="130" width="208" height="110" rx="5" ry="5" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="305" y="222" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,444) scale(1,-1)">AuditLogs</text>
+			<text x="305" y="205" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,410) scale(1,-1)">PK id</text>
+			<text x="305" y="192" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,384) scale(1,-1)">FK user_id -&gt; Users.id (optional)</text>
+			<text x="305" y="179" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,358) scale(1,-1)">action</text>
+			<text x="305" y="166" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,332) scale(1,-1)">timestamp (UTC)</text>
+			<path d="M 208,177 L 296,177 Z" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1.1;"/>
+			<polygon points="296 177, 290.4736 179.3365, 290.4736 174.6635" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(9%,23%,28%); fill-rule: evenodd;"/>
+			<text x="228" y="185" style="font-family: Helvetica; font-size: 8px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,370) scale(1,-1)">1 : 0..N</text>
+			<rect x="0" y="6" width="208" height="95" rx="5" ry="5" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="9" y="83" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,166) scale(1,-1)">Persons</text>
+			<text x="9" y="66" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,132) scale(1,-1)">PK id</text>
+			<text x="9" y="53" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,106) scale(1,-1)">name</text>
+			<text x="9" y="40" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,80) scale(1,-1)">kind: guest / employee</text>
+			<rect x="296" y="6" width="208" height="95" rx="5" ry="5" style="stroke: rgb(9%,23%,28%); stroke-linecap: butt; stroke-width: 1; fill: rgb(92%,95%,96%); fill-rule: evenodd;"/>
+			<text x="305" y="83" style="font-family: Helvetica-Bold; font-size: 10px;fill: rgb(9%,23%,28%); stroke:none;" transform="translate(0,166) scale(1,-1)">Rooms</text>
+			<text x="305" y="66" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,132) scale(1,-1)">PK id</text>
+			<text x="305" y="53" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,106) scale(1,-1)">name (unique)</text>
+			<text x="305" y="40" style="font-family: Helvetica; font-size: 8.5px;fill: rgb(0%,0%,0%); stroke:none;" transform="translate(0,80) scale(1,-1)">capacity (positive integer)</text>
 		</g>
 	</g>
 </svg>

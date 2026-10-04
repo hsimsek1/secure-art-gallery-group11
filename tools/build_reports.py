@@ -43,70 +43,55 @@ def boundary(d, x, y, w, h, label):
     d.add(String(x+8,y+h-14,label,fontName="Helvetica-Bold",fontSize=9,fillColor=RED))
 
 
+
 def architecture():
-    d=Drawing(504,205)
-    box(d,3,85,108,72,"Browser",["Guest / Employee", "Administrator"])
-    boundary(d,131,48,241,145,"One Flask application")
-    box(d,143,85,100,72,"Web interface",["HTML / CSS", "Jinja templates"])
-    box(d,260,85,100,72,"Backend",["Routes / services", "Login / roles"])
-    box(d,396,85,105,72,"SQLite",["SQLAlchemy", "Five tables"])
-    arrow(d,111,121,143,121)
-    arrow(d,243,121,260,121)
-    arrow(d,360,121,396,121)
-    d.add(String(4,29,"HTTP on loopback now; HTTPS planned for network deployment.",fontName="Helvetica",fontSize=9,fillColor=INK))
-    d.add(String(4,13,"Responses return encoded HTML; data persists in instance/gallery.db.",fontName="Helvetica",fontSize=9,fillColor=INK))
-    return d
-
-
-def dfd():
-    d=Drawing(504,395)
-    box(d,143,331,210,54,"E1 User browser",["Guest / Employee / Administrator"])
-    boundary(d,4,119,496,198,"TB1 Client to server trust boundary")
-    box(d,143,236,210,53,"P1 Request checks",["Session / role / CSRF / validation"])
-    arrow(d,218,331,218,289,"F1 inputs",lx=154,ly=319)
-    arrow(d,292,289,292,331,"F2 HTML",lx=302,ly=322)
-    box(d,17,142,135,63,"P2 Authentication",["Login / logout", "Verify hash and account"])
-    box(d,184,142,135,63,"P3 Protected writes",["Events / persons / users", "Validate state + commit"])
-    box(d,351,142,135,63,"P4 Authorized reads",["Occupancy / history", "Admin audit review"])
-    arrow(d,168,236,85,205)
-    arrow(d,250,236,250,205)
-    arrow(d,330,236,416,205)
-    boundary(d,4,6,496,102,"TB2 Application to persistence trust boundary")
-    box(d,17,17,460,59,"SQLite relational stores",[
-        "D1 Users | D2 Persons | D3 Rooms | D4 GalleryEvents | D5 AuditLogs",
-        "Server-only file access; browsers cannot access these stores directly."])
-    arrow(d,75,142,75,76,"F3",lx=87,ly=126)
-    arrow(d,75,76,75,142)
-    arrow(d,250,142,250,76,"F4",lx=260,ly=126)
-    arrow(d,250,76,250,142)
-    arrow(d,414,142,414,76,"F5",lx=425,ly=126)
-    arrow(d,414,76,414,142)
-    d.add(Line(353,263,493,263,strokeColor=INK))
-    d.add(Line(493,263,493,43,strokeColor=INK))
-    arrow(d,493,43,477,43)
-    d.add(String(471,272,"F6",fontName="Helvetica",fontSize=8,fillColor=INK))
+    d = Drawing(504, 130)
+    box(d, 0, 42, 110, 65, "Browser", ["Login and room list", "HTML / CSS"])
+    box(d, 177, 28, 150, 92, "Flask backend", ["Routes / Flask-Login", "Password and role checks", "SQLAlchemy"])
+    box(d, 394, 42, 110, 65, "SQLite", ["week6.db", "Four tables"])
+    arrow(d, 110, 74, 177, 74, "HTTP", lx=126, ly=82)
+    arrow(d, 327, 74, 394, 74, "Queries", lx=339, ly=82)
+    d.add(String(0, 7, "Browser requests return server-rendered HTML. Local demonstration: 127.0.0.1.", fontSize=9))
     return d
 
 
 def erd():
-    d=Drawing(504,452)
-    box(d,4,280,207,165,"Users",["PK id : integer", "username : text UNIQUE", "password_hash : text", "role : guest / employee / admin", "active : boolean", "created_at : UTC datetime", "session_version : integer"])
-    box(d,296,329,204,116,"Persons",["PK id : integer", "name : text", "kind : guest / employee", "created_at : UTC datetime"])
-    box(d,296,212,204,95,"Rooms",["PK id : integer", "name : text UNIQUE", "capacity : positive integer"])
-    box(d,4,10,220,190,"GalleryEvents",["PK id : integer", "FK person_id -> Persons.id", "FK room_id -> Rooms.id (optional)", "event_type : one of four types", "timestamp : UTC datetime", "FK created_by -> Users.id"])
-    box(d,296,10,204,165,"AuditLogs",["PK id : integer", "FK user_id -> Users.id (optional)", "action : text", "details : bounded text", "timestamp : UTC datetime", "result : SUCCESS / REJECTED"])
-    arrow(d,77,280,77,200,"1 to N",lx=85,ly=235)
-    # Orthogonal connectors avoid crossing field text.
-    d.add(Line(296,371,251,371,strokeColor=INK));d.add(Line(251,371,251,179,strokeColor=INK))
-    arrow(d,251,179,224,179,"1 to N",lx=251,ly=183)
-    d.add(Line(296,257,266,257,strokeColor=INK));d.add(Line(266,257,266,140,strokeColor=INK))
-    arrow(d,266,140,224,140,"1 to N",lx=235,ly=125)
-    d.add(Line(211,302,236,302,strokeColor=INK));d.add(Line(236,302,236,225,strokeColor=INK))
-    d.add(Line(236,225,286,225,strokeColor=INK));d.add(Line(286,225,286,92,strokeColor=INK))
-    arrow(d,286,92,296,92)
-    d.add(String(295,187,"Users 1 to N AuditLogs",fontName="Helvetica",fontSize=8,fillColor=INK))
+    d = Drawing(504, 245)
+    box(d, 0, 130, 208, 110, "Users", [
+        "PK id", "username (unique)", "password_hash", "role: guest / employee / admin"])
+    box(d, 296, 130, 208, 110, "AuditLogs", [
+        "PK id", "FK user_id -> Users.id (optional)", "action", "timestamp (UTC)"])
+    arrow(d, 208, 177, 296, 177, "1 : 0..N", lx=228, ly=185)
+    box(d, 0, 6, 208, 95, "Persons", [
+        "PK id", "name", "kind: guest / employee"])
+    box(d, 296, 6, 208, 95, "Rooms", [
+        "PK id", "name (unique)", "capacity (positive integer)"])
     return d
 
+
+def dfd():
+    d = Drawing(504, 352)
+    box(d, 154, 285, 200, 60, "E1 Browser", ["Guest / Employee / Administrator"])
+    boundary(d, 4, 135, 496, 132, "TB1 - Untrusted browser to Flask")
+    box(d, 18, 154, 216, 76, "P1 Login / logout", [
+        "Input + CSRF checks", "Hash check and signed session"])
+    box(d, 270, 154, 216, 76, "P2 Protected pages", [
+        "Login + administrator role checks", "Read room reference data"])
+    arrow(d, 211, 285, 125, 230, "F1 requests", lx=95, ly=273)
+    arrow(d, 370, 230, 300, 285, "F2 HTML", lx=345, ly=275)
+    arrow(d, 234, 190, 270, 190)
+    boundary(d, 4, 8, 496, 112, "")
+    d.add(String(130, 106, "TB2 - Flask to SQLite", fontName="Helvetica-Bold", fontSize=9, fillColor=RED))
+    box(d, 18, 21, 320, 64, "SQLite data stores", [
+        "D1 Users | D2 AuditLogs", "D3 Persons | D4 Rooms"])
+    box(d, 354, 21, 132, 64, "P3 Local setup", ["init-db and seed", "Trusted CLI"])
+    arrow(d, 99, 154, 99, 85, "F3", lx=109, ly=126)
+    arrow(d, 81, 85, 81, 154)
+    arrow(d, 292, 154, 292, 85, "F4", lx=302, ly=126)
+    arrow(d, 275, 85, 275, 154)
+    arrow(d, 354, 47, 338, 47)
+    d.add(String(339, 94, "F5 initialization / seed", fontSize=8, fillColor=INK))
+    return d
 
 DIAGRAMS = {"architecture":architecture, "dfd":dfd, "erd":erd}
 styles = getSampleStyleSheet()

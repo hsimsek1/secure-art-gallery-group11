@@ -1,6 +1,3 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Request unsuccessful | Group 11</title><link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"></head><body><main><h1>Request unsuccessful ({{ code }})</h1>
-{% if code == 403 %}<p>Your account does not have permission for this page or action.</p>
-{% elif code == 429 %}<p>Too many login attempts. Try again in 15 minutes.</p>
-{% elif code in [500,503] %}<p>The service is temporarily unavailable. Please try again later.</p>
-{% elif code == 409 %}<p>This change conflicts with an existing record or a protected account. Refresh and try again.</p>
-{% else %}<p>The request could not be completed. Check the address or reload the form and try again.</p>{% endif %}<a href="{{ url_for('web.index') }}">Return to gallery</a></main></body></html>
+{% extends 'base.html' %}
+{% block title %}Access denied{% endblock %}
+{% block content %}<h1>Access denied</h1><p>{{ message }}</p>{% endblock %}

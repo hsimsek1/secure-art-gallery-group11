@@ -1,8 +1,14 @@
-{% extends 'base.html' %}{% block title %}Dashboard{% endblock %}{% block content %}
-<h1>Gallery dashboard</h1><p>Signed in as {{ current_user.username }} · {{ current_user.role }}</p>
-<div class="card"><h2>Current occupancy</h2><p class="count">{{ state|length }} people in the gallery</p><p>Includes people in rooms and in the lobby.</p></div>
-<h2>Rooms</h2><table><thead><tr><th>Room</th><th>Occupancy</th><th>Capacity</th></tr></thead><tbody>
-{% for room in rooms %}<tr><td>{{ room.name }}</td><td>{{ room_counts[room.id] }}</td><td>{{ room.capacity }}</td></tr>{% endfor %}</tbody></table>
-{% if current_user.role in ['employee','admin'] %}<h2>People currently inside</h2><table><thead><tr><th>Person ID</th><th>Name</th><th>Type</th><th>Location</th></tr></thead><tbody>
-{% for person in occupants %}<tr><td>{{ person.id }}</td><td>{{ person.name }}</td><td>{{ person.kind }}</td><td>{{ room_names.get(state[person.id], 'Gallery lobby') }}</td></tr>{% else %}<tr><td colspan="4">No one is currently inside.</td></tr>{% endfor %}</tbody></table>
-{% else %}<p>Guest accounts can view occupancy totals. Individual movements are restricted to staff.</p>{% endif %}{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<h1>Welcome, {{ current_user.username }}</h1>
+<p>Signed in as <strong>{{ {'guest': 'User/Guest', 'employee': 'Employee', 'admin': 'Administrator'}[current_user.role] }}</strong>.</p>
+<section class="card">
+  <h2>Gallery rooms</h2>
+  <p>Reference rooms loaded from the gallery database.</p>
+  <table>
+    <thead><tr><th>Room</th><th>Capacity</th></tr></thead>
+    <tbody>{% for room in rooms %}<tr><td>{{ room.name }}</td><td>{{ room.capacity }}</td></tr>{% endfor %}</tbody>
+  </table>
+</section>
+{% endblock %}
