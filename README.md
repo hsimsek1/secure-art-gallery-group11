@@ -32,7 +32,7 @@ There is no ORM, separate database server, JavaScript framework or separate conf
 - `database/`: schema and fictional seed records.
 - `docs/`: requirements/design PDFs, editable Markdown and three SVG diagrams.
 - `tests/functional/` and `tests/security/`: 14 milestone tests.
-- `tools/`: generate local credentials and rebuild the reports.
+- `tools/`: a one-time script to generate local credentials.
 
 There are four tables: Users, Persons, Rooms and a small AuditLogs table for login/logout activity. Persons are seeded reference records only. Sessions use Flask signed cookies, so no session table is needed.
 
@@ -51,7 +51,7 @@ The login function follows a straight sequence: read the form, validate it, find
 
 A few Flask conventions are worth learning: `create_app()` builds the application; a `Blueprint` groups page routes; `@login_required` redirects visitors who have not logged in; `g` holds a database connection for the current request. Comments explain these where they are used. Configuration comes from the private `instance/config.py` file; tests supply temporary settings.
 
-`tools/build_reports.py` is only a PDF/diagram utility. You do not need it to run or demonstrate the application.
+`tools/setup_local.py` creates random passwords, writes Flask's settings file, and writes the account list you use to log in. Each password has its own variable, and the two file writes show exactly what is saved. The `secrets` module generates secure random values; `"x"` opens a new file without overwriting an existing one.
 
 ## Installation and database setup
 
@@ -128,4 +128,4 @@ To demonstrate Week 6: initialize and seed the database, log in as Employee, vie
 
 The scope follows **F26_BIBIFI_Project.pdf, pages 4-5**. Full gallery events, occupancy, history, persons/account management and state validation belong to the later application milestone and are absent here. Docker appears in the overall repository layout on page 7, but it is omitted from this Weeks 4-6 version because it is not required by that milestone's implementation checklist.
 
-`database/schema.sql` is the single schema definition used by `init-db`. No export or ORM model synchronization is needed. To rebuild the PDFs and diagrams, run `python tools/build_reports.py` in a documentation environment with ReportLab available; ReportLab is not needed to run the application. Review the PDF layout after rebuilding.
+`database/schema.sql` is the single schema definition used by `init-db`. No export or ORM model synchronization is needed. The finished PDFs and editable Markdown/SVG files are included directly; there is no report-generation script to install or maintain. If you change a report, update its Markdown source and export a matching PDF with your Markdown editor, then check the layout.

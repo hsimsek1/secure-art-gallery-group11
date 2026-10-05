@@ -12,25 +12,25 @@ if config_path.exists() or credentials_path.exists() or (root / ".env").exists()
 
 instance.mkdir(exist_ok=True)
 
-passwords = {}
-for role in ("admin", "employee", "guest"):
-    passwords[role] = secrets.token_urlsafe(18)
-
+# Generate a secret for Flask and a different password for each account.
 secret_key = secrets.token_hex(32)
-# repr() adds the quotes needed for a Python string in config.py.
-config_lines = ["SECRET_KEY = " + repr(secret_key)]
-for role, password in passwords.items():
-    setting_name = "SEED_" + role.upper() + "_PASSWORD"
-    config_lines.append(setting_name + " = " + repr(password))
+admin_password = secrets.token_urlsafe(18)
+employee_password = secrets.token_urlsafe(18)
+guest_password = secrets.token_urlsafe(18)
 
 # "x" creates a new file and refuses to overwrite an existing one.
 with config_path.open("x", encoding="utf-8") as config_file:
-    config_file.write("\n".join(config_lines) + "\n")
+    config_file.write(f'''SECRET_KEY = "{secret_key}"
+SEED_ADMIN_PASSWORD = "{admin_password}"
+SEED_EMPLOYEE_PASSWORD = "{employee_password}"
+SEED_GUEST_PASSWORD = "{guest_password}"
+''')
 
 with credentials_path.open("x", encoding="utf-8") as credentials_file:
-    credentials_file.write("Group 11 LOCAL DEMO ACCOUNTS - never upload this file\n")
-    for role, password in passwords.items():
-        username = role + "11"
-        credentials_file.write(f"{role} | {username} | {password}\n")
+    credentials_file.write(f'''Group 11 LOCAL DEMO ACCOUNTS - never upload this file
+admin | admin11 | {admin_password}
+employee | employee11 | {employee_password}
+guest | guest11 | {guest_password}
+''')
 
 print("Created ignored instance/config.py and local-credentials.txt. Keep both private.")
